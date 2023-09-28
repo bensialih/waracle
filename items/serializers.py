@@ -1,7 +1,6 @@
 from urllib.parse import urlparse
 
 from items.models import Cake
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl, field_validator
 from rest_framework import serializers
 
 
@@ -15,7 +14,7 @@ def check_url(value: str):
         result = urlparse(value)
         if not all([result.scheme, result.netloc]):
             raise Exception
-    except Exception as e:
+    except Exception:
         raise serializers.ValidationError('field needs to be a url.')
 
 

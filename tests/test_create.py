@@ -1,10 +1,7 @@
-from typing import List
-
 import pytest
-from django.test import Client, TestCase
+from django.test import Client
 from django.urls import reverse
 from items.models import Cake
-from items.serializers import CakeSerializer
 
 client = Client()
 
@@ -55,9 +52,8 @@ def test_create_valid(payload, change, status, error):
 
 @pytest.mark.django_db
 def test_delete_cakes():
-    cake = Cake.objects.create(
-        **changed_payload({}, key_to=dict(imageUrl='image_url', yumFactor='yum_factor'))
-    )
+    keys = dict(imageUrl='image_url', yumFactor='yum_factor')
+    cake = Cake.objects.create(**changed_payload({}, key_to=keys))
     assert Cake.objects.count() == 1
     response = client.delete(reverse('delete-cake', kwargs=dict(pk=cake.pk)))
     assert response.status_code == 204

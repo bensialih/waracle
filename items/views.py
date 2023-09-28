@@ -1,15 +1,12 @@
-from typing import List
-
-from django.shortcuts import Http404, get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from items.models import Cake
 from items.serializers import CakeSerializer
-from pydantic import parse_obj_as
 
 # Create your views here.
-from rest_framework import generics, mixins, status, viewsets
+from rest_framework import status
 from rest_framework.decorators import api_view, schema
 from rest_framework.schemas import AutoSchema
-from rest_framework.views import APIView, Response
+from rest_framework.views import Response
 
 
 @api_view(['GET'])
