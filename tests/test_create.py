@@ -1,10 +1,9 @@
-import pytest
-from django.test import TestCase
-from items.models import Cake
-from django.test import Client
-from django.urls import reverse
 from typing import List
 
+import pytest
+from django.test import Client, TestCase
+from django.urls import reverse
+from items.models import Cake
 from items.serializers import CakeSerializer
 
 client = Client()

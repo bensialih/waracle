@@ -1,7 +1,8 @@
-from items.models import Cake
-from rest_framework import serializers
-from pydantic import BaseModel, HttpUrl, field_validator, Field, ConfigDict
 from urllib.parse import urlparse
+
+from items.models import Cake
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl, field_validator
+from rest_framework import serializers
 
 
 def yum_factor_check(value: int):
