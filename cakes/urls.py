@@ -20,13 +20,15 @@ from items import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('swagger-ui/', TemplateView.as_view(
-        template_name='swagger-ui.html',
-        extra_context={'schema_url':'openapi-schema'}
-    ), name='swagger-ui'),
-
+    path(
+        'swagger-ui/',
+        TemplateView.as_view(
+            template_name='swagger-ui.html',
+            extra_context={'schema_url': 'openapi-schema'},
+        ),
+        name='swagger-ui',
+    ),
     path('cakes/', views.cakes_all, name='all-cake'),
-        # views.CakesAll.as_view(), name='all-cake'),
     path('cakes/<int:pk>/', views.cakes_delete, name='delete-cake'),
     path('cakes/add/', views.cakes_add_one, name='add-cake'),
 ]
