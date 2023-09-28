@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
+from items import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +25,8 @@ urlpatterns = [
         extra_context={'schema_url':'openapi-schema'}
     ), name='swagger-ui'),
 
-    # path('cakes/')
+    path('cakes/', views.cakes_all, name='all-cake'),
+        # views.CakesAll.as_view(), name='all-cake'),
+    path('cakes/<int:pk>/', views.cakes_delete, name='delete-cake'),
+    path('cakes/add/', views.cakes_add_one, name='add-cake'),
 ]
