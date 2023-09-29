@@ -21,8 +21,11 @@ jobs:
       - name: Run pytest
         # Run tox using the version of Python in `PATH`
         run: |
-          pip install coverage
-          coverage run -m pytest .
+          pip install coverage pytest-cov
+          pytest --cache-clear --cov=functions tests > pytest-coverage.txt
 
-      - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v2
+      - name: Comment coverage
+        uses: coroo/pytest-coverage-commentator@v1.0.2
+
+      # - name: Upload Coverage to Codecov
+      #   uses: codecov/codecov-action@v2
