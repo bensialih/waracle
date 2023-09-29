@@ -20,12 +20,9 @@ jobs:
         run: pip install -r requirements.txt
       - name: Run pytest
         # Run tox using the version of Python in `PATH`
-        run: pytest .
+        run: |
+          pip install coverage
+          coverage run -m pytest .
 
-
-  # build:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Build Docker image
-  #       run: docker build . --file Dockerfile --tag api:$(date +%s)
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v2
