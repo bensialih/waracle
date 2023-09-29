@@ -32,19 +32,19 @@ def changed_payload(change: dict, key_to={}) -> dict:
             changed_payload,
             dict(yumFactor=6),
             400,
-            dict(yum_factor=['This field must be between 1-5']),
+            dict(yumFactor=['This field must be between 1-5']),
         ],
         [
             changed_payload,
             dict(imageUrl='google'),
             400,
-            dict(image_url=['field needs to be a url.']),
+            dict(imageUrl=['field needs to be a url.']),
         ],
     ),
 )
 @pytest.mark.django_db
 def test_create_valid(payload, change, status, error):
-    response = client.post(reverse('add-cake'), payload(change))
+    response = client.post(reverse('cakes'), payload(change))
     assert response.status_code == status
     if response.status_code != 200:
         assert response.json() == error
@@ -55,7 +55,7 @@ def test_delete_cakes():
     keys = dict(imageUrl='image_url', yumFactor='yum_factor')
     cake = Cake.objects.create(**changed_payload({}, key_to=keys))
     assert Cake.objects.count() == 1
-    response = client.delete(reverse('delete-cake', kwargs=dict(pk=cake.pk)))
+    response = client.delete(reverse('del-cake', kwargs=dict(pk=cake.pk)))
     assert response.status_code == 204
     assert Cake.objects.count() == 0
 
@@ -64,7 +64,7 @@ def test_delete_cakes():
 def test_delete_fail_cakes():
     # test what happens when the object to delete doesnt exist
     assert Cake.objects.count() == 0
-    response = client.delete(reverse('delete-cake', kwargs=dict(pk=7)))
+    response = client.delete(reverse('del-cake', kwargs=dict(pk=7)))
     assert response.status_code == 404
     assert response.json() == dict(detail='Not found.')
 
@@ -76,7 +76,7 @@ def test_get_all_cakes():
     )
     [Cake.objects.create(**data) for i in range(7)]
     assert Cake.objects.count() == 7
-    response = client.get(reverse('all-cake'))
+    response = client.get(reverse('cakes'))
     returned = response.json()
     assert len(returned) == 7
     assert returned[0].get('yumFactor') == 5

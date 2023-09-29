@@ -19,29 +19,15 @@ def check_url(value: str):
 
 
 class CakeSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
     name = serializers.CharField()
     comment = serializers.CharField()
-    image_url = serializers.CharField(
-        max_length=200, validators=[check_url], label="imageUrl"
+    imageUrl = serializers.CharField(
+        max_length=200, validators=[check_url], source="image_url"
     )
-    yum_factor = serializers.IntegerField(
-        label="yumFactor", validators=[yum_factor_check]
+    yumFactor = serializers.IntegerField(
+        source="yum_factor", validators=[yum_factor_check]
     )
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        image_url = data.pop('image_url')
-        yum_factor = data.pop('yum_factor')
-        data.update(yumFactor=yum_factor, imageUrl=image_url)
-        return data
-
-    def to_internal_value(self, data):
-        data = data.dict()
-        yum_factor = data.pop('yumFactor')
-        image_url = data.pop('imageUrl')
-        data['image_url'] = image_url
-        data['yum_factor'] = yum_factor
-        return super().to_internal_value(data)
 
     def create(self, validated_data: dict):
         return Cake.objects.create(**validated_data)

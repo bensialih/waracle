@@ -1,33 +1,31 @@
-from django.shortcuts import get_object_or_404
 from items.models import Cake
 from items.serializers import CakeSerializer
-
-# Create your views here.
 from rest_framework import status
-from rest_framework.decorators import api_view, schema
-from rest_framework.schemas import AutoSchema
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import DestroyModelMixin, ListModelMixin
 from rest_framework.views import Response
 
 
-@api_view(['GET'])
-@schema(AutoSchema())
-def cakes_all(request):
-    return Response(CakeSerializer(Cake.objects.all(), many=True).data)
+class CakesApi(GenericAPIView, ListModelMixin, DestroyModelMixin):
+    serializer_class = CakeSerializer
+    queryset = Cake.objects.all()
+
+    def post(self, request):
+        '''create a new cakes.'''
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, format=None):
+        '''Return a list of all cakes.'''
+        return self.list(request)
 
 
-@api_view(['DELETE'])
-@schema(AutoSchema())
-def cakes_delete(request, pk: str):
-    cake = get_object_or_404(Cake, pk=pk)
-    cake.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+class CakesDeleteApi(GenericAPIView, DestroyModelMixin):
+    serializer_class = CakeSerializer
+    queryset = Cake.objects.all()
 
-
-@api_view(['POST'])
-@schema(AutoSchema())
-def cakes_add_one(request):
-    serializer = CakeSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, format=None, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)

@@ -1,0 +1,12 @@
+name: run tests
+run-name: ${{ github.actor }} is testing out GitHub Actions
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Docker image
+        run: docker build . --file Dockerfile --tag api:$(date +%s)
